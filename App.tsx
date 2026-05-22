@@ -2,7 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Post, Comment, Reply, MoodType } from './types';
 import { MOOD_OPTIONS, PERSONA_COLORS, DEFAULT_AVATAR_COLOR } from './constants';
-import { generateCommentsForPost, generateFollowupReply, AiRuntimeSettings } from './services/geminiService';
+import {
+  generateCommentsForPost,
+  generateFollowupReply,
+  AiRuntimeSettings,
+  DEFAULT_GEMINI_MODEL,
+  DEFAULT_OPENAI_COMPATIBLE_BASE_URL,
+  DEFAULT_OPENAI_COMPATIBLE_MODEL,
+} from './services/geminiService';
 import { Button } from './components/Button';
 import { CommentCard } from './components/CommentCard';
 
@@ -10,6 +17,34 @@ const STORAGE_KEY = 'ai_treehole_posts';
 const SETTINGS_KEY = 'ai_treehole_settings';
 const DEFAULT_APP_NAME = 'AI 树洞';
 const DEFAULT_THEME_ID = 'cotton-candy';
+
+const isGeminiModelName = (model?: string) => model?.trim().toLowerCase().startsWith('gemini');
+
+const normalizeAiSettings = (saved?: Partial<AiRuntimeSettings>): AiRuntimeSettings => {
+  const provider = saved?.provider || 'local';
+  const savedModel = saved?.model?.trim();
+  const openaiModel = saved?.openaiModel?.trim()
+    || (savedModel && !isGeminiModelName(savedModel) ? savedModel : '')
+    || DEFAULT_OPENAI_COMPATIBLE_MODEL;
+  const geminiModel = saved?.geminiModel?.trim()
+    || (savedModel && isGeminiModelName(savedModel) ? savedModel : '')
+    || DEFAULT_GEMINI_MODEL;
+
+  return {
+    provider,
+    appName: saved?.appName || DEFAULT_APP_NAME,
+    themeId: saved?.themeId || DEFAULT_THEME_ID,
+    apiKey: saved?.apiKey || '',
+    model: provider === 'gemini'
+      ? geminiModel
+      : provider === 'openai-compatible'
+        ? openaiModel
+        : openaiModel,
+    openaiModel,
+    geminiModel,
+    baseUrl: saved?.baseUrl || DEFAULT_OPENAI_COMPATIBLE_BASE_URL,
+  };
+};
 
 const THEME_PRESETS = [
   {
@@ -142,12 +177,7 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false);
   const importInputRef = useRef<HTMLInputElement | null>(null);
   const [aiSettings, setAiSettings] = useState<AiRuntimeSettings>({
-    provider: 'local',
-    appName: DEFAULT_APP_NAME,
-    themeId: DEFAULT_THEME_ID,
-    apiKey: '',
-    model: 'gpt-4o-mini',
-    baseUrl: 'https://api.openai.com/v1',
+    ...normalizeAiSettings(),
   });
   
   // Create Post State
@@ -172,15 +202,7 @@ export default function App() {
     const savedSettings = localStorage.getItem(SETTINGS_KEY);
     if (savedSettings) {
       try {
-        setAiSettings({
-          provider: 'local',
-          appName: DEFAULT_APP_NAME,
-          themeId: DEFAULT_THEME_ID,
-          apiKey: '',
-          model: 'gpt-4o-mini',
-          baseUrl: 'https://api.openai.com/v1',
-          ...JSON.parse(savedSettings),
-        });
+        setAiSettings(normalizeAiSettings(JSON.parse(savedSettings)));
       } catch (e) {
         console.error("Failed to parse settings", e);
       }
@@ -518,8 +540,8 @@ export default function App() {
                     onClick={() => setAiSettings(prev => ({
                       ...prev,
                       provider: 'openai-compatible',
-                      model: prev.model || 'gpt-4o-mini',
-                      baseUrl: prev.baseUrl || 'https://api.openai.com/v1',
+                      model: prev.openaiModel || DEFAULT_OPENAI_COMPATIBLE_MODEL,
+                      baseUrl: prev.baseUrl || DEFAULT_OPENAI_COMPATIBLE_BASE_URL,
                     }))}
                     className={`text-xs sm:text-sm min-h-10 px-2 py-2 rounded-xl border transition-all whitespace-nowrap ${
                       aiSettings.provider === 'openai-compatible'
@@ -533,7 +555,7 @@ export default function App() {
                     onClick={() => setAiSettings(prev => ({
                       ...prev,
                       provider: 'gemini',
-                      model: prev.model && prev.model !== 'gpt-4o-mini' ? prev.model : 'gemini-2.5-flash',
+                      model: prev.geminiModel || DEFAULT_GEMINI_MODEL,
                     }))}
                     className={`text-xs sm:text-sm min-h-10 px-2 py-2 rounded-xl border transition-all whitespace-nowrap ${
                       aiSettings.provider === 'gemini'
@@ -598,7 +620,7 @@ export default function App() {
                         type="text"
                         value={aiSettings.baseUrl || ''}
                         onChange={e => setAiSettings(prev => ({ ...prev, baseUrl: e.target.value }))}
-                        placeholder="https://api.openai.com/v1"
+                        placeholder={DEFAULT_OPENAI_COMPATIBLE_BASE_URL}
                         className="w-full min-h-11 text-sm border border-[var(--color-line)] bg-[var(--color-field)] rounded-xl px-3 py-2.5 text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]/30"
                       />
                     )}
@@ -612,8 +634,17 @@ export default function App() {
                     <input
                       type="text"
                       value={aiSettings.model || ''}
-                      onChange={e => setAiSettings(prev => ({ ...prev, model: e.target.value }))}
-                      placeholder={aiSettings.provider === 'gemini' ? 'gemini-2.5-flash' : 'gpt-4o-mini / deepseek-chat / 本地模型名'}
+                      onChange={e => {
+                        const model = e.target.value;
+                        setAiSettings(prev => ({
+                          ...prev,
+                          model,
+                          ...(prev.provider === 'gemini'
+                            ? { geminiModel: model }
+                            : { openaiModel: model }),
+                        }));
+                      }}
+                      placeholder={aiSettings.provider === 'gemini' ? DEFAULT_GEMINI_MODEL : `${DEFAULT_OPENAI_COMPATIBLE_MODEL} / deepseek-chat / 本地模型名`}
                       className="w-full min-h-11 text-sm border border-[var(--color-line)] bg-[var(--color-field)] rounded-xl px-3 py-2.5 text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]/30"
                     />
                     {aiSettings.provider === 'openai-compatible' && (

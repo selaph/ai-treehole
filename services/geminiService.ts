@@ -8,12 +8,14 @@ export interface AiRuntimeSettings {
   themeId?: string;
   apiKey?: string;
   model?: string;
+  openaiModel?: string;
+  geminiModel?: string;
   baseUrl?: string;
 }
 
-const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash";
-const DEFAULT_OPENAI_COMPATIBLE_MODEL = "gpt-4o-mini";
-const DEFAULT_OPENAI_COMPATIBLE_BASE_URL = "https://api.openai.com/v1";
+export const DEFAULT_GEMINI_MODEL = "gemini-flash-latest";
+export const DEFAULT_OPENAI_COMPATIBLE_MODEL = "gpt-5-mini";
+export const DEFAULT_OPENAI_COMPATIBLE_BASE_URL = "https://api.openai.com/v1";
 
 const getGeminiClient = (settings?: AiRuntimeSettings) => {
   if (!settings || settings.provider !== "gemini") return null;
