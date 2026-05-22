@@ -71,17 +71,20 @@ npm install --ignore-scripts
 
 ## 当前收口状态
 
-2026-05-21 这一轮先收口，不继续硬加功能。当前版本已经适合作为轻量自用/试玩版继续准备发布：
+2026-05-21 这一轮已经完成轻量发布，不继续硬加功能。当前版本适合作为轻量自用/试玩版继续给别人试用：
 
 - 完整体验更偏向联网 API 模式，本地语料主要是兜底和演示。
 - 建议发布说明写清楚“推荐联网使用”，否则外部 AI API 不能回复，页面字体或样式也可能加载不完整。
 - 下载版不必现在做单 HTML；只要把构建后的 `dist/` 整个文件夹压缩给用户，解压后打开 `index.html` 即可。不要只单独分发 `index.html`。
-- 发布暂缓，等用户晚点在当前对话或新对话里再继续。
 - 2026-05-21 晚上试发布进展：
   - 新增 `package:local` 脚本，可一键构建并生成 `releases/ai-treehole-local-dist.zip`。
   - 已生成干净的本地下载包，zip 内只包含 `dist/`、`dist/index.html` 和 `dist/assets/...`。
   - 新增 `.github/workflows/deploy-pages.yml`，后续推到 GitHub 后可用 GitHub Actions 部署 Pages。
-  - 当前项目目录还不是 git 仓库；真正上线还需要初始化/连接 GitHub 仓库，并在 GitHub Pages 设置里选择 GitHub Actions。
+  - 已创建并推送 GitHub 仓库：`https://github.com/selaph/ai-treehole`
+  - 已启用 GitHub Pages，来源选择 GitHub Actions。
+  - 在线版已发布：`https://selaph.github.io/ai-treehole/`
+  - 本机新增专用 GitHub SSH key：`/Users/selaph/.ssh/id_ed25519_ai_treehole`，公钥标题为 `Mac Codex AI Treehole`。
+  - 后续更新流程：本地修改后运行构建检查，提交并 push 到 `main`，GitHub Actions 会自动重新发布 Pages。
 
 ## 当前运行方式
 

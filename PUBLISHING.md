@@ -116,7 +116,21 @@ dist/index.html
 
 - 已有本地下载包：`releases/ai-treehole-local-dist.zip`
 - 已有 GitHub Pages 自动部署 workflow：`.github/workflows/deploy-pages.yml`
-- 当前目录还不是 git 仓库，真正上线到 GitHub Pages 前还需要：
-  - 初始化/连接 Git 仓库。
-  - 推送到 GitHub。
-  - 在 GitHub 仓库设置里启用 Pages，来源选择 GitHub Actions。
+- GitHub 仓库：`https://github.com/selaph/ai-treehole`
+- GitHub Pages 在线版：`https://selaph.github.io/ai-treehole/`
+- 2026-05-21 已在仓库 Settings > Pages 里把来源设置为 GitHub Actions。
+- 最近一次发布检查：
+  - 本地 `npm run build` 通过。
+  - GitHub Actions 的 `build` 和 `deploy` 都通过。
+  - Chrome 已能打开在线版页面。
+
+后续更新时，一般流程是：
+
+```bash
+npm run build
+git add .
+git commit -m "Update AI treehole"
+git push
+```
+
+push 到 `main` 后，GitHub Actions 会自动重新部署在线版。
