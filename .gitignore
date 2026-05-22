@@ -12,6 +12,8 @@ dist
 dist-ssr
 releases/*.zip
 *.local
+PROJECT_STATUS.md
+PUBLISHING.md
 
 # Editor directories and files
 .vscode/*
