@@ -14,7 +14,7 @@ https://selaph.github.io/ai-treehole/
 
 ### 下载版
 
-1. 下载 `ai-treehole-local-dist.zip`。
+1. 下载 [`ai-treehole-local-dist.zip`](releases/ai-treehole-local-dist.zip)。
 2. 解压。
 3. 打开解压出来的 `dist/index.html`。
 
