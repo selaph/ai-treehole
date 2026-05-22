@@ -16,23 +16,21 @@ https://selaph.github.io/ai-treehole/
 
 1. 下载 `ai-treehole-local-dist.zip`。
 2. 解压。
-3. 打开里面的 `index.html`。
+3. 打开解压出来的 `dist/index.html`。
 
-不要只把 `index.html` 单独拿出来，它旁边的 `assets` 文件夹也要留在一起。
-
-如果你是在 GitHub 上看到这个项目，下载包需要在发布页或作者分享的附件里下载；仓库源码页面里默认不会直接显示这个 zip。
+解压后不要挪动里面的文件。`index.html` 和旁边的 `assets` 文件夹要留在一起，直接打开 `dist/index.html` 就好。
 
 ## 推荐联网使用
 
-这个小工具更适合在有网的时候用。
+这个小工具打开就能试，但更推荐联网使用。
 
 如果没联网：
 
 - 外部 AI API 不能回复。
 - 页面字体或样式可能加载不完整。
-- 本地语料模式可能还能用，但体验会弱一点。
+- 本地语料模式还能用，不过表达会比较有限，回复也会更死板。
 
-## 想让回复更聪明
+## 本地语料和 API
 
 点左侧「本地与 API 设置」，可以切换：
 
@@ -40,7 +38,7 @@ https://selaph.github.io/ai-treehole/
 - 通用 API：适合 OpenAI、OpenRouter、DeepSeek、LM Studio、Ollama 等。
 - Gemini：适合填写自己的 Gemini API Key。
 
-API Key 需要用你自己的。作者不会提供公共 Key。
+本地语料比较适合快速体验。想要回复更自然，推荐切到 API 模式，填写你自己的 API Key。作者不会提供公共 Key。
 
 ## 可以自己改的小设置
 
@@ -66,11 +64,3 @@ API Key 需要用你自己的。作者不会提供公共 Key。
 - 换浏览器可能看不到之前的内容。
 - 清理浏览器数据后，记录可能会消失。
 - 用外部 AI API 时，你写的树洞会发送给你自己选择的 API 服务商。
-
-## 开发和发布
-
-给开发者看的构建、打包、发布说明在：
-
-```txt
-PUBLISHING.md
-```
