@@ -18,7 +18,7 @@ https://selaph.github.io/ai-treehole/
 2. 解压。
 3. 打开解压出来的 `dist/index.html`。
 
-解压后不要挪动里面的文件。`index.html` 和旁边的 `assets` 文件夹要留在一起，直接打开 `dist/index.html` 就好。
+下载版已经打包成单个网页文件，直接双击 `dist/index.html` 就好。
 
 ## 推荐联网使用
 

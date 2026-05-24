@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "build:local": "vite build",
-    "package:local": "npm run build && mkdir -p releases && ditto -c -k --keepParent dist releases/ai-treehole-local-dist.zip && zip -d releases/ai-treehole-local-dist.zip '*/._*' >/dev/null",
+    "package:local": "npm run build && node scripts/make-local-package.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
